@@ -1,89 +1,66 @@
-# Cloud Computing Laboratory
+# Cloud Computing Lab
 
-A curated repository of practical experiments, benchmark studies, automation scripts, and technical reports conducted for the **Cloud Computing Laboratory** course.
-
----
-
-## 🔬 Practicals & Lab Modules
-
-### [Lab 01: Hypervisor Computational Performance Benchmarking](./Lab-01-Hypervisor-Benchmarking/)
-
-An empirical evaluation comparing bare-metal (**Type-1: Proxmox VE / KVM**) and hosted (**Type-2: VMware Workstation on Windows 11**) virtualization architectures under standardized computational stress.
-
-- **Workload**: CPU prime number computation to 20,000 via `sysbench`
-- **Guest Configuration**: Ubuntu 24.04 LTS, 2 vCPUs, 2 GB RAM, 20 GB Virtual Disk
-- **Key Finding**: Proxmox VE demonstrated a **+25.78% throughput increase** (1,716.69 vs 1,364.78 EPS) and a **20.55% reduction in mean processing latency** (0.58 ms vs 0.73 ms) due to the absence of host OS scheduling preemption and intermediate VM-exit penalties.
-
-#### Quick Telemetry Comparison
-
-| Evaluation Metric | Proxmox VE (Type-1) | VMware Workstation (Type-2) | Advantage |
-| :--- | :---: | :---: | :--- |
-| **Throughput (Events/sec)** | **1,716.69** | 1,364.78 | **+25.78% (Type-1 speedup)** |
-| **Total Events (10s window)**| **17,169** | 13,650 | **+3,519 events completed** |
-| **Average Latency** | **0.58 ms** | 0.73 ms | **20.55% lower latency** |
-| **95th Percentile Latency** | **0.65 ms** | 0.89 ms | **26.97% lower tail latency** |
-| **Max Latency Spike** | **2.78 ms** | 4.06 ms | **31.53% less jitter** |
-
-<p align="center">
-  <img src="./Lab-01-Hypervisor-Benchmarking/images/overall_performance_dashboard.png" alt="Lab 01 Performance Dashboard" width="800"/>
-</p>
-
-- 📄 **[Full Academic Lab Report](./Lab-01-Hypervisor-Benchmarking/Lab%20Report.md)**: Formal evaluation report with hardware architecture theory, context-switch breakdowns, and mathematical derivations.
-- 📘 **[Lab 01 Walkthrough & Guide](./Lab-01-Hypervisor-Benchmarking/README.md)**: In-depth setup, step-by-step reproduction instructions, and analytical findings.
--⚙️ **[Lab Scripts](./Lab-01-Hypervisor-Benchmarking/script/)**: Automated benchmark harness, telemetry parser, and plot generator.
+A technical repository housing practical implementations, benchmark methodologies, and empirical performance evaluations conducted for the **Cloud Computing Laboratory** course.
 
 ---
 
+## 🔬 Laboratory Experiments
 
+| Experiment | Focus Area | Status |
+|---|---|---|
+| **Experiment 1** | Performance Analysis of Type-1 and Type-2 Hypervisors | `Completed` |
+| **Experiment 2** | Performance Analysis of Virtual Machines and Containers | `Completed` |
+
+- 📄 **[View Experiment 1 Details](exp01-hypervisor-benchmarking/README.md)**  
+- 📄 **[View Experiment 2 Details](exp02-container-benchmarking/README.md)**  
+
+---
+
+## 📌 Executive Summary of Modules
+
+### 1. [Experiment 1: Hypervisor Performance Benchmarking](exp01-hypervisor-benchmarking/README.md)
+An empirical evaluation comparing bare-metal (**Type-1: Proxmox VE / KVM**) and hosted (**Type-2: VMware Workstation Pro on Windows 11**) virtualization architectures under standardized computational stress.
+- **Workload**: CPU prime number computation (20,000 primes) using `sysbench`.
+- **Guest Configuration**: Ubuntu 24.04 LTS, 2 vCPUs, 2 GB RAM, 20 GB Virtual Disk.
+- **Key Finding**: Proxmox VE demonstrated a **+25.78% throughput increase** (1,716.69 vs 1,364.78 EPS) and a **20.55% reduction in mean processing latency** (0.58 ms vs 0.73 ms) due to direct hardware scheduling without intermediate host operating system preemption.
+
+### 2. [Experiment 2: Virtual Machines vs. Containers](exp02-container-benchmarking/README.md)
+A comparative investigation evaluating hardware virtualization (VMware) against operating-system-level virtualization (**Docker Engine**) across four critical performance vectors.
+- **Workloads**: Multi-threaded CPU baseline, memory bandwidth and latency (10 repeated runs), sequential and random block storage I/O (`fio`), and REST microservice performance (`FastAPI` + `ab`).
+- **Resource Constraints**: Identical 4 vCPUs and 7.7 GiB RAM quotas enforced via Linux `cgroups v2`.
+- **Key Finding**: Docker achieved near-native memory execution parity (-0.78% delta) and higher sequential disk throughput (+45.6%), while small-block random write operations highlighted Union File System (OverlayFS) Copy-on-Write overhead.
+
+---
 
 ## 📁 Repository Organization
 
 ```text
-cc-lab/
+my-repo/
 ├── README.md                                  # Repository overview and master index
 │
-├── Lab-01-Hypervisor-Benchmarking/            # Module 01: Hypervisor Benchmarking
-│   ├── Lab Report.md                          # Full academic laboratory write-up and analysis
-│   ├── README.md                              # Module documentation and reproduction guide
-│   ├── images/                                # High-resolution plots and terminal logs
-│   │   ├── overall_performance_dashboard.png
-│   │   ├── events_per_second_comparison.png
-│   │   ├── latency_comparison.png
-│   │   ├── total_events_comparison.png
-│   │   ├── Lab 1.jpeg
-│   │   └── Lab 2.jpeg
-│   └── script/                                # Reproducibility & telemetry tools
-│       ├── benchmark.sh                       # Shell automation for guest audit & sysbench
-│       ├── parse_sysbench.py                  # Telemetry parsing & delta calculation engine
-│       └── generate_plots.py                  # Matplotlib script generating visual figures
+├── exp01-hypervisor-benchmarking/             # Module 01: Hypervisor Benchmarking
+│   ├── README.md                              # Complete experiment write-up and analysis
+│   ├── generate_graphs.py                     # Script generating 8 publication-grade figures
+│   ├── graphs/                                # Rendered high-resolution performance plots
+│   ├── results/                               # Technical performance analysis notes
+│   └── screenshots/                           # Proxmox, VMware, and comparative screenshots
 │
+└── exp02-container-benchmarking/              # Module 02: VM vs. Container Benchmarking
+    ├── README.md                              # Complete experiment write-up and analysis
+    ├── api/                                   # FastAPI benchmark application & Dockerfile
+    ├── docker/                                # Standalone container build manifest
+    ├── docs/                                  # Architecture, hardware specs, and methodology
+    ├── results/                               # Raw stdout logs, processed CSVs, and figures
+    └── scripts/                               # Data aggregation and visualization scripts
 ```
 
 ---
 
-## 🚀 Quick Start & Reproducibility
+## 🛠️ Technology Stack & Environment
 
-### 1. Ingest & Compare Hypervisor Telemetry (Lab 01)
-Run the analytical comparison engine to inspect deltas across both test runs:
-```bash
-python Lab-01-Hypervisor-Benchmarking/script/parse_sysbench.py
-```
-
-### 2. Generate Lab 01 Visual Figures
-Recreate the publication-grade telemetry charts:
-```bash
-python Lab-01-Hypervisor-Benchmarking/script/generate_plots.py
-```
-
-
----
-
-## 🧰 Technology & Environment Stack
-
-- **Containerization & Runtimes**: Docker Engine 27+ / 29+, containerd, runc
 - **Hypervisors**: Proxmox VE 8.x (Bare-Metal KVM) | VMware Workstation Pro 17.x
-- **Guest Operating System**: Ubuntu Server 24.04 LTS (x86_64)
-- **Application Stack**: Python 3.12, Flask 3.0.3
-- **Workload Benchmark**: `sysbench` (Prime Sieve integer stress test)
-- **Scripting & Telemetry**: Python 3.10+, Bash shell automation
-- **Visualization**: Matplotlib & NumPy
+- **Container Engine**: Docker Engine 27+ / containerd (cgroups v2, OverlayFS)
+- **Guest OS**: Ubuntu 22.04 / 24.04 LTS (x86_64)
+- **Benchmark Tools**: `sysbench` (CPU, Memory), `fio` (Block Storage), `ab` (HTTP)
+- **Application Stack**: Python 3.12, FastAPI, Uvicorn
+- **Data & Telemetry**: Pandas, Matplotlib, NumPy
